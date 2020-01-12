@@ -5,6 +5,7 @@ import dash_html_components
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objects as go
+import random
 
 #Data Pre-processing
 #from dash_core_components import Input
@@ -14,13 +15,24 @@ from dash.dependencies import Input, Output
 data = pd.read_csv('C:/Users\Rohan Das\Documents\Rohan_Docs\Study\Semester 3\Kmd_project\Data\Topic-Modelling-master/data.csv')
 event_list = data.Group.unique()
 el = event_list.tolist()
-#--------------------------------
+#-------------------------------------------
 fdata = data[data.Group == 'Bush Fire']
-# lat1 = fdata['lat']
-# lon1 = fdata['lon']
-# text1 = fdata['City']
 
 traces = []
+rgb = pd.DataFrame()
+temp = []
+#----------------Color-----------------------
+# for j in range(len(event_list)):
+#         temp.append(random.randint(0, 255))
+#
+# rgb['Color'] = temp
+# rgb['Group'] = el
+
+color = ["#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+             for i in range(len(event_list))]
+rgb['Color'] = color
+rgb['Group'] = el
+# print(rgb)
 
 for i in range(len(fdata)):
         traces.append(
@@ -50,7 +62,7 @@ layout = dict(
     hovermode="closest",
     plot_bgcolor="#F9F9F9",
     paper_bgcolor="#F9F9F9",
-    #legend=dict(font=dict(size=10), orientation="h"),
+    # legend=dict(font=dict(size=10), orientation="h"),
     title="Satellite Overview",
     showlegend = False,
     mapbox=dict(
@@ -59,6 +71,7 @@ layout = dict(
         center=dict(lon=-55.3781, lat=3.4360),
         zoom=2,
     ),
+    transition={'duration': 500},
 )
 
 
@@ -99,25 +112,34 @@ app.layout = html.Div(children=[
    [Input('opt-dropdown', 'value')] )
 def updatefigure(selectedevent):
     traces1 = []
-    fdata1 = []
-    for j in range(len(selectedevent)):
-        ev = selectedevent[j]
-        fdata1.append(data[data.Group == ev])
-    print(fdata1[:, 5])
+    col = []
+    # fdata1.append(data[data['Group'] == selectedevent.values[0]])
+    # for j in range(len(selectedevent)):
+    #     ev = selectedevent[j]
+    #     fdata1= data[data.Group == ev]
+    #     print(selectedevent[j])
+
+    fdata1 = data[data['Group'].isin(selectedevent)]
+    for l in range(len(fdata1)):
+        for k in range(len(rgb)):
+            if rgb.iloc[k,1] == fdata1.iloc[l,5]:
+                col.append(rgb.iloc[k,0])
+    # print(col)
 
     for i in range(len(fdata1)):
-       traces1.append(
+        traces1.append(
            go.Scattermapbox(
                lat=[fdata1.iloc[i,6]],
                lon=[fdata1.iloc[i,7]],
                mode='markers',
                marker=go.scattermapbox.Marker(
-                   size=14
+                   size=14,
+                   color= col[i]
                ),
                text=[fdata1.iloc[i,5]]
 
        ))
-
+    # print(fdata1)
     return {
            'data': traces1,
            'layout': layout,
