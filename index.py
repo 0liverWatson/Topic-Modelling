@@ -1,0 +1,40 @@
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
+
+from app import app
+import vis_map, vis_topic
+
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
+    html.Div(id='page-content'),
+])
+
+
+index_page = html.Div([
+     html.H3('Start Page'),
+     html.Br(), 
+     html.H2('Real-time topic modelling of Disruptive Events from twitter and their Visualization'),
+     html.H6("""This application shows the geo location of live streaming of disruptive tweets corresponding to disruptive events of United Kingdom. 
+               Furthermore, for each event, we can visualize the top ten bursting topics over a window of 5min, 10 min, 1ht, 4hr and 8hr along
+                    with the important kewqords associated to each topic of each event with its contribution score to the bursting topic."""),
+     html.H3("Instructions to run the application"),
+     html.H6("- Click on the START button to start the application"),
+     html.H6("- Click on the buttons of respective time windows for display of tweets on geomap for disruptive events, once they turn green"),
+     html.Button(dcc.Link('START', href='/vis_map')),
+])
+
+
+@app.callback(Output('page-content', 'children'),
+              [Input('url', 'pathname')])
+def display_page(pathname):
+    if pathname == '/vis_map':
+        return vis_map.layout
+    elif pathname == '/vis_topic':
+        return vis_topic.layout
+    else:
+        return index_page
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
