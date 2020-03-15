@@ -14,7 +14,7 @@ app.layout = html.Div([
 
 index_page = html.Div([
      html.H3('Start Page'),
-     html.Br(), 
+     html.Br(),
      html.H2('Real-time topic modelling of Disruptive Events from twitter and their Visualization'),
      html.H6("""This application shows the geo location of live streaming of disruptive tweets corresponding to disruptive events of United Kingdom. 
                Furthermore, for each event, we can visualize the top ten bursting topics over a window of 5min, 10 min, 1ht, 4hr and 8hr along
@@ -31,8 +31,12 @@ index_page = html.Div([
 def display_page(pathname):
     if pathname == '/vis_map':
         return vis_map.layout
-    elif pathname == '/vis_topic':
-        return vis_topic.layout
+    elif pathname == '/page-1':
+        return vis_topic.layout_page1
+    elif pathname == '/page-2':
+        return vis_topic.layout_page2
+    elif pathname == '/page-3':
+        return vis_topic.layout_page3
     else:
         return index_page
 
