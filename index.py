@@ -1,6 +1,8 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
 
 from app import app
 import vis_map, vis_topic
@@ -30,9 +32,14 @@ index_page = html.Div([
               [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/vis_map':
-        return vis_map.layout
+        return vis_map.layout()
+    # elif pathname.startswith('/vis_topic'):
+    #     parsed = urlparse.urlparse(pathname)
+    #     print(pathname)
+    #     print(parsed)
+    #     return vis_topic.layout(parse_qs(parsed.query)['win'])
     elif pathname == '/page-1':
-        return vis_topic.layout_page1
+        return vis_topic.layout_page1()
     elif pathname == '/page-2':
         return vis_topic.layout_page2
     elif pathname == '/page-3':

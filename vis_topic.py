@@ -8,7 +8,7 @@ import random
 
 from app import app
 
-str11 = "https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/DS/";
+str11 = "https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/DS/"
 
 #Extract the events for all the windows
 #--------------------------------------
@@ -17,6 +17,8 @@ str11 = "https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/mas
 event_list5 = pd.read_csv("https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/DS/5min/eventlist_5min.csv")
 el5 = event_list5.Events.unique()
 el5 = el5.tolist()
+
+counter_5 = 0
 
 #10 minutes window
 event_list10 = pd.read_csv("https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/DS/10min/eventlist_10min.csv")
@@ -41,7 +43,36 @@ el1 = el1.tolist()
 
 traces =[]
 
-layout_page1 = html.Div([
+def layout(window):
+
+    event_list5 = pd.read_csv("https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/DS/5min/eventlist_5min.csv")
+    el5 = event_list5.Events.unique()
+    el5 = el5.tolist()
+
+    
+
+    return html.Div([
+            html.H2('Evolution of top bursty topics over the ' + window + ' Minutes window'),
+            html.H4('List of Bursting Events ( Select one to view the topic evolution ) '),
+            dcc.Dropdown(
+                            id='opt-dropdown_5min',
+                            options=[{'label': opt, 'value': opt} for opt in el5]
+            ),
+            dcc.Graph(id='5min1_event'),
+            html.H4('List of Bursting Topics ( Select one to view the keyword evolution ) '),
+            dcc.Dropdown(
+                            id='opt-dropdown_5min_topics'
+            ),
+            dcc.Graph(id='5min1_topic')
+        ])
+
+def layout_page1():
+
+
+    print("asdasd")
+
+
+    return html.Div([
                     html.H2('Evolution of top bursty topics over the 5 Minutes window'),
                     html.H4('List of Bursting Events ( Select one to view the topic evolution ) '),
                     dcc.Dropdown(
@@ -54,7 +85,7 @@ layout_page1 = html.Div([
                         id='opt-dropdown_5min_topics'
                     ),
                     dcc.Graph(id='5min1_topic')
-])
+    ])
 
 layout_page2 = html.Div([
                     html.H2('Evolution of top bursty topics over the 10 Minutes window'),
@@ -96,10 +127,10 @@ layout_page3 = html.Div([
 )
 def update_fig5min(selectedevent):
 
-    val = str11 + "/5min/events/window_5min_" + selectedevent + ".csv";
-    topic_list_5min1 = pd.read_csv(val);
-    dd = topic_list_5min1.drop(columns=['year']);
-    traces = [];
+    val = str11 + "/5min/events/window_5min_" + selectedevent + ".csv"
+    topic_list_5min1 = pd.read_csv(val)
+    dd = topic_list_5min1.drop(columns=['year'])
+    traces = []
     number_of_colors = 20
     for (columnName, columnData) in dd.iteritems():
         traces.append(
@@ -129,11 +160,11 @@ def update_fig5min(selectedevent):
 )
 def update_options(selectedevent):
 
-    val = str11 + "/5min/events/window_5min_" + selectedevent + ".csv";
+    val = str11 + "/5min/events/window_5min_" + selectedevent + ".csv"
 
-    dd = pd.read_csv(val);
-    dd = dd.drop(columns=['year']);
-    top5 = dd;
+    dd = pd.read_csv(val)
+    dd = dd.drop(columns=['year'])
+    top5 = dd
     top5 = list(top5.columns)
     return [{'label': opt, 'value': opt} for opt in top5]
 
@@ -146,10 +177,10 @@ def update_options(selectedevent):
 )
 def update_fig5min_topics(selectedtopic,selectedevent):
 
-    val = str11 + "/5min/topics/window_5min_" + selectedevent + "_" + selectedtopic + ".csv";
-    topic_list_5min1 = pd.read_csv(val);
-    dd = topic_list_5min1.drop(columns=['year']);
-    traces = [];
+    val = str11 + "/5min/topics/window_5min_" + selectedevent + "_" + selectedtopic + ".csv"
+    topic_list_5min1 = pd.read_csv(val)
+    dd = topic_list_5min1.drop(columns=['year'])
+    traces = []
     for (columnName, columnData) in dd.iteritems():
         traces.append(
             go.Bar(
@@ -186,9 +217,9 @@ def update_fig10min(selectedevent):
     x = "".join(myTuple)
     val = x
 
-    topic_list_10min1 = pd.read_csv(val);
-    dd = topic_list_10min1.drop(columns=['year']);
-    traces = [];
+    topic_list_10min1 = pd.read_csv(val)
+    dd = topic_list_10min1.drop(columns=['year'])
+    traces = []
     number_of_colors = 20
     for (columnName, columnData) in dd.iteritems():
         traces.append(
@@ -223,9 +254,9 @@ def update_options(selectedevent):
     x = "".join(myTuple)
     val = x
 
-    dd = pd.read_csv(val);
-    dd = dd.drop(columns=['year']);
-    top10 = dd;
+    dd = pd.read_csv(val)
+    dd = dd.drop(columns=['year'])
+    top10 = dd
     top10 = list(top10.columns)
     return [{'label': opt, 'value': opt} for opt in top10]
 
@@ -244,9 +275,9 @@ def update_fig10min_topics(selectedtopic,selectedevent):
     x = "".join(myTuple)
     val = x
 
-    topic_list_10min1 = pd.read_csv(val);
-    dd = topic_list_10min1.drop(columns=['year']);
-    traces = [];
+    topic_list_10min1 = pd.read_csv(val)
+    dd = topic_list_10min1.drop(columns=['year'])
+    traces = []
     number_of_colors = 20
     for (columnName, columnData) in dd.iteritems():
         traces.append(
@@ -263,7 +294,7 @@ def update_fig10min_topics(selectedtopic,selectedevent):
             'barmode': 'stack'
         },
     }
-#--------------------------------------------------------------------------------------------------
+
 
 
 

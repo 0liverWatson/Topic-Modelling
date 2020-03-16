@@ -1,6 +1,7 @@
 import dash
 import dash_core_components
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components
 import dash_html_components as html
 import pandas as pd
@@ -10,15 +11,23 @@ from datetime import datetime
 from dash.dependencies import Input, Output
 from app import app
 
+import glob
+import os
+
 import time
 
 ##Data Pre-processing
 
-data = pd.read_csv('https://raw.githubusercontent.com/SubhshreeMangaraj/Topic-Modelling/master/data.csv')
+list_of_files = glob.glob('data/events/*') # * means all if need specific format then *.csv
+latest_file = max(list_of_files, key=os.path.getctime)
+print(latest_file)
+data = pd.read_csv(latest_file)
 event_list = data.Group.unique()
 el = event_list.tolist()
-fdata = data[data.Group == 'Bush Fire']
+print(el)
+fdata = data[data.Group == el[0]]
 rgb = pd.DataFrame()
+reload_count = 0
 
 #-------------Lat Long-----------------------
 # data[['Lat','Lon']] = data.Coordinates.str.split(",",expand=True)
@@ -55,7 +64,20 @@ layoutmap = dict(
     )
 )
 
-layout = html.Div(
+def layout():
+
+    list_of_files = glob.glob('data/events/*') # * means all if need specific format then *.csv
+    latest_file = max(list_of_files, key=os.path.getctime)
+    print(latest_file)
+    data = pd.read_csv(latest_file)
+    event_list = data.Group.unique()
+    el = event_list.tolist()
+    print(el)
+    fdata = data[data.Group == el[0]]
+    rgb = pd.DataFrame()
+    reload_count = 0
+
+    return html.Div([
     dcc.Tabs([
         dcc.Tab(
             label='5 Minutes Window', children=[
@@ -65,7 +87,7 @@ layout = html.Div(
             dcc.Dropdown(
                 id='opt-dropdown',
                 options=[{'label': opt, 'value': opt} for opt in el],
-                value=['Bush Fire'],
+                value=[el[0]],
                 multi=True
             ),
             html.Button(dcc.Link('Refresh', href='/vis_map')),
@@ -80,7 +102,7 @@ layout = html.Div(
             dcc.Dropdown(
                 id='opt-dropdown1',
                 options=[{'label': opt, 'value': opt} for opt in el],
-                value=['Bush Fire'],
+                value=[el[0]],
                 multi=True
             ),
             html.Button(dcc.Link('Refresh', href='/vis_map')),
@@ -95,14 +117,29 @@ layout = html.Div(
             dcc.Dropdown(
                 id='opt-dropdown2',
                 options=[{'label': opt, 'value': opt} for opt in el],
-                value=['Bush Fire'],
+                value=[el[0]],
                 multi=True
             ),
             html.Button(dcc.Link('Refresh', href='/vis_map')),
             dcc.Graph(id='map-disp2',),
             html.Button(dcc.Link('Click for topic visualization for 1 Hour window',     href='/page-3', className='b1')),
-        ]),
-    ])
+        ])
+    ]),
+    dcc.Interval(
+            id='interval-component',
+            interval=10*1000, # in milliseconds
+            n_intervals=0
+        ),
+    dbc.Toast(
+            "This toast is placed in the top right "+str(reload_count),
+            id="positioned-toast",
+            header="Positioned toast",
+            is_open=False,
+            dismissable=True,
+            icon="danger",
+            # top: 66 positions the toast below the navbar
+            style={"position": "fixed", "top": 66, "right": 10, "width": 350},
+        )]
 )
 
 @app.callback(
@@ -146,6 +183,7 @@ def disable_dropdown_one(val1):
 def updatefigure(selectedevent):
     traces1 = []
     col = []
+
 
     fdata1 = data[data['Group'].isin(selectedevent)]
     # year_data = data[data['Year'] == selectedyear]
@@ -281,3 +319,11 @@ def updatefigure(selectedevent):
            'layout': layoutmap,
     }
 
+
+@app.callback(Output('positioned-toast', 'is_open'),
+              [Input('interval-component', 'n_intervals')])
+def update_metrics(n):
+    # print('opening toast',n )
+    global reload_count
+    reload_count +=1
+    return True

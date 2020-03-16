@@ -1,0 +1,16 @@
+[DTM]
+path = '/dtm-win64.exe'
+topics = 5
+words = 7
+
+[JSON]
+events ='data/events/'
+
+
+[DiscruptiveScoreThresholds]
+5 = 0.4
+10 = 0.27
+60 = 0.4
+
+
+
