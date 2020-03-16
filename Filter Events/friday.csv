@@ -1,0 +1,57 @@
+Time,Text,Hashtages,Coordinates,City,Entities,indexes,Person_Name
+12:15:05,it's friday! it's be a busy week for u a we have be add new item to our website. if youre look for so,[],"[0.477715, 51.325298]",Rochester,"[['friday', 'DATE'], ['a busy week', 'DATE']]",234,KaizenAntiques
+12:15:08,its friday lunchtime in - but feel like a sunday,['Dublin'],"[-6.387438, 53.298745]",Dublin City,"[['friday', 'DATE'], ['sunday', 'DATE']]",251,RTENewsPaulC
+12:19:05,fact friday ... a thread from my bumbling bee ... (part 1),"['Bee', 'beelife', 'phdchat']","[-0.408945, 51.79144]",Harpenden,"[['friday', 'DATE'], ['1', 'CARDINAL']]",1013,BumblingLaura
+12:19:43,"phishing friday, the site be quite a functional copy of site.",[],"[-2.689649, 54.451137]",North East,"[['friday', 'DATE']]",1143,djc1982
+12:21:30,freaky friday!,['boohoo'],"[-1.609027, 54.506817]",Darlington,"[['friday', 'DATE']]",1516,JadeNinaa
+12:22:10,filming tourist show up to close attraction be the new english stag party in temple bar on good friday,[],"[-6.387438, 53.298745]",Dublin City,"[['english', 'NORP'], ['temple bar', 'GPE'], ['friday', 'DATE']]",1648,SMurphyTV
+12:22:26,friday feel and work all weekend!,[],"[-3.851639, 55.983199]",Falkirk,"[['friday', 'DATE'], ['all weekend', 'DATE']]",1712,Michellemuir17
+12:22:34,good thing happen to good people! our friday start with phil and anne collect their bespoke d,[],"[-1.14452, 52.569949]",Oadby,"[['friday', 'DATE'], ['phil', 'PERSON'], ['anne', 'PERSON']]",1744,ReepMidlands
+12:23:48,"friday at creamfields will be carnage darren styles, ben nicky and scooter",[],"[-2.034105, 51.977226]",East Midlands,"[['friday', 'DATE'], ['darren', 'PERSON'], ['ben nicky', 'PERSON']]",2006,JakeDobson96
+12:24:28,its a friday vibe,[],"[-6.387438, 53.298745]",Dublin City,"[['friday', 'DATE']]",2140,DetectiveClarke
+12:25:34,"we really appreciate it, happy friday",['ThanksForTheFollow'],"[-2.088554, 51.345626]",Seend,"[['friday', 'DATE']]",2335,VolunteerBANES
+12:26:08,with a niangs thai thats the gl food friday triple crown,[],"[-2.272842, 51.721517]",Stroud,"[['a niangs thai', 'NORP'], ['gl', 'ORG'], ['friday', 'DATE']]",2439,benfalconer
+12:26:23,its freaky friday,[],"[-3.244824, 54.092923]",Barrow-in-Furness,"[['friday', 'DATE']]",2490,Aaapril_
+12:26:32,beautiful spring scene in botanical gardens -a little bit of niceness for your friday c,['Sheffield'],"[-1.573648, 53.309898]",Sheffield,"[['spring', 'DATE'], ['botanical gardens', 'LOC'], ['friday', 'DATE']]",2521,VisitSheffield
+12:29:17,a nice of mr poole bring to life with on a friday afternoon! @ laindon,"['snapshot', 'literature', 'year7']","[0.383634, 51.546378]",Basildon,"[['mr poole', 'PERSON'], ['friday', 'DATE'], ['afternoon', 'TIME']]",3107,SchJamesHornsby
+12:31:46,a new season is the best excuse to add to your collection plus it a friday lady million empire. your rules. -,[],"[-0.111476, 51.419425]",Camberwell,"[['friday', 'DATE']]",3595,fragrancerich
+12:33:55,it's friday which can only mean one thing - it's time for a sweet potato burrito from,['nomnom'],"[-2.51942, 51.396936]",Keynsham,"[['friday', 'DATE'], ['one', 'CARDINAL']]",4031,baldyrunner
+12:34:16,this weekend... . open a usual: . friday: 12am-6am . saturday: 11pm-8am . @ gbar liverpool,[],"[-3.008791, 53.36489]",Liverpool,"[['friday', 'DATE'], ['saturday', 'DATE']]",4092,gbarliverpool
+12:34:21,happy phalaenopsis friday everyone,"['mothersdayiscoming', 'orchids', 'phalaenopsphriday']","[-1.670703, 50.751736]",Double H Nursery,"[['friday', 'DATE']]",4113,DoubleHuk
+12:35:36,face to face friday,"['slimmingworld', 'slimmingworldkillingworthwithrachel', 'face2facefriday']","[-1.601032, 55.003873]",Longbenton,"[['friday', 'DATE']]",4365,RachelFalcus
+12:36:17,while social distance i may make a toad in the hole. that traditional friday dish.,['SocialDistancingNow'],"[-1.608934, 55.162002]",Ashington,"[['friday', 'DATE']]",4502,tjfluffy73
+12:39:16,our pick for your friday be the shore shaker 4.2% double dry hopped ipa &amp; savag,['TGIF'],"[-1.506148, 53.826732]",Preston (North Bar),"[['friday', 'DATE'], ['4.2%', 'PERCENT'], ['ipa &amp', 'ORG']]",5115,Preston_Bar
+12:40:16,so i'm down at my local tesco do my weekly shop a per every friday. i've be push out the way countless time,[],"[-3.29772, 51.739823]",Rhymney,"[['tesco', 'ORG'], ['weekly', 'DATE'], ['friday', 'DATE']]",5314,HeyLucyAnne
+12:43:17,it's another bumper new music friday! we've get review of three record out today:,[],"[-2.454026, 53.416348]",Salford,"[['friday', 'DATE'], ['three', 'CARDINAL'], ['today', 'DATE']]",5954,ball00nmachine
+12:43:32,friday the 13th doesnt have to be a bad luck day. its all about change the mindset. happy friday folks!,[],"[-4.393285, 55.796184]",Glasgow,"[['friday the 13th', 'DATE'], ['friday', 'DATE']]",6005,MissFAhmedMaths
+12:43:46,our friday shop. beautiful display of what you need in these gloomy time noticeable abundance of fr,['freshisbest'],"[-0.259465, 51.417277]",Wandsworth,"[['friday', 'DATE']]",6052,DinesandVines
+12:44:26,just get beat off uni of come off court to find out tour be cancel and prem have be suspend nice happy fuck friday eh,[],"[-1.573648, 53.309898]",Sheffield,"[['friday', 'DATE']]",6197,TaylorEnstone
+12:46:04,cheltenham friday,[],"[-2.418923, 53.750518]",Great Harwood,"[['friday', 'DATE']]",6496,mervo82
+12:46:07,to misquote john wyndham - when a day that you happen to know be a friday morning in london start off by sound,[],"[-0.112442, 51.5068]",City of London,"[['john wyndham', 'PERSON'], ['friday', 'DATE'], ['morning', 'TIME'], ['london', 'GPE']]",6512,DrTonyStrike
+12:46:11,who's hungry!!! well it be friday after all so sink your lip into our hungry burger......ossssshhhh it's so good i,[],"[-0.253407, 51.269527]",Banstead,"[['friday', 'DATE'], ['hungry burger', 'PERSON']]",6523,Waterhousecafe
+12:48:35,happy friday..... who want a short video clip on this friday 13th i will post xxx,['escort'],"[-6.546814, 53.178753]",South Dublin,"[['friday', 'DATE'], ['this friday 13th', 'DATE']]",7007,IrishLyndsay
+12:48:58,"friday 13th: 9.30pm til 1am the piper's rest where i may or may not be opening the show with ""jason scars"" by sn",[],"[-3.188372, 55.949593]",the pipers rest,"[['friday', 'ORG'], ['9.30pm', 'CARDINAL'], ['1am', 'TIME']]",7091,AcousticDavid
+12:49:54,"pickup fix friday. this pair of t top come in for fresh baseplates and lead wire, to replace the rather abuse",[],"[-0.351597, 51.491866]",Ealing,"[['friday', 'DATE']]",7256,Montysguitars
+12:50:51,"same with me,i go on my own most friday to do our shop,car park be full,no trolleys,headache when i get home",[],"[-6.387438, 53.298745]",Dublin City,"[['friday', 'DATE']]",7434,alanmurphy24
+12:51:16,friday aka highday,[],"[-0.104501, 51.518605]",Hackney,"[['friday', 'DATE']]",7527,teamdrowzy
+12:52:15,"yes, it friday lunchtime. yes, it no, there be no queue anywhere. not even at the 3 prets iv",[],"[-0.090518, 51.505495]",Borough Market,"[['friday', 'DATE'], ['3', 'CARDINAL']]",7727,kien1974
+12:53:40,just get into an uber a stupid love be starting. friday say gay rights!,[],"[-2.454026, 53.416348]",Salford,"[['friday', 'DATE']]",8005,jayson__matthew
+12:54:11,follow friday of these beaut,[],"[-6.546814, 53.178753]",South Dublin,"[['friday', 'DATE']]",8094,IrishLyndsay
+12:54:34,nice upbeat fun happy song for this friday - happy (official music video) via,['fridayvibes'],"[-6.387438, 53.298745]",Dublin City,"[['friday', 'DATE']]",8168,DerekBurkePR
+12:56:27,"join me from 5pm on shmufm for cruise control friday! with your covidchaos aberdeen weekend gig guide, the",[],"[-2.189976, 57.107695]",Aberdeen,"[['5', 'CARDINAL'], ['shmufm for cruise control', 'WORK_OF_ART'], ['friday', 'DATE']]",8531,TheBruthaVoodoo
+12:56:28,here be a lovely old sleepy mole to cheer you all up and wish you a happy friday . .,['dogsofinstagram'],"[-2.340935, 51.214783]",Frome,"[['friday', 'DATE']]",8539,rushbynature
+12:57:01,just a reminder for everyone to keep get their friday night chinese takeaway to support the local business. the,[],"[-4.393285, 55.796184]",Glasgow,"[['friday', 'DATE'], ['chinese', 'NORP']]",8642,spam5hipman
+12:57:11,"happy friday! looking forward to this weekend show, glasgow where exhibit &amp; share",[],"[-4.393285, 55.796184]",Glasgow,"[['friday', 'ORG'], ['weekend', 'DATE'], ['glasgow', 'GPE']]",8683,askforanSP
+13:02:33,"happy friday you beautiful people. even with someone me challenge time ahead, let our doggy keep our spirit u",[],"[-0.161749, 51.294332]",Croydon,"[['friday', 'DATE']]",9725,ReggiesPlaceUK
+13:03:27,feel good friday - self care to help you take care of others personally and professionally - hope for all of u on,[],"[-3.328512, 55.894729]",Edinburgh,"[['friday', 'DATE']]",9890,ProjectLiftScot
+13:05:14,"friday treat so bought a wrap of the day meal, very nice but no fry didnt notice until i have driven back to work",[],"[-3.145788, 53.304078]",Birkenhead,"[['friday', 'DATE'], ['day', 'DATE']]",10298,Scooby_Jo
+13:05:56,the best way to start a friday setting the tone for a productive but fun day! who doesnt love a little friday d,[],"[-0.835631, 53.047743]",Newark-on-Trent,"[['friday', 'DATE'], ['friday', 'DATE']]",10454,SOPHIEERAC
+13:06:01,in need of a friday friend x,[],"[-3.640637, 52.947131]",North West,"[['friday', 'DATE']]",10469,cawleybxx
+13:06:15,bookish friday - scream about your favourite thrillers via,[],"[-1.894843, 52.887473]",Uttoxeter,"[['friday', 'DATE']]",10524,susanhampson57
+13:06:45,in mester on a friday night,[],"[-2.155904, 53.908573]",Earby,"[['friday', 'DATE']]",10637,salty933
+13:08:25,open friday and saturday evening from 6pm.hot food to eat in or take away3 course for 15!,[],"[-0.259465, 51.417277]",Wandsworth,"[['friday', 'DATE'], ['saturday', 'DATE'], ['evening', 'TIME'], ['6pm', 'DATE'], ['15', 'CARDINAL']]",10950,BarmouthKitchen
+13:10:25,another day at ! there's still time to grab a friday treat - we're until 2pm!,['Sunny'],"[-2.58829, 51.453338]",Finzels Reach Market,"[['another day', 'DATE'], ['friday', 'DATE'], ['2', 'CARDINAL']]",11368,FinzelsReachMkt
+13:11:48,friday afternoon in city airport....,[],"[-0.008924, 51.496049]",East Ham,"[['friday', 'DATE'], ['afternoon', 'TIME'], ['city', 'GPE']]",11662,KirstyScanlan
+13:11:49,friday's beers! on the bar today! beer board:,[],"[-3.199903, 53.351583]",Hoylake,"[['friday', 'DATE'], ['today', 'DATE'], ['beer board', 'ORG']]",11668,whitelioninnwk
+13:12:41,wat a week if ever there be a reason for friday drinks!!,[],"[-6.387438, 53.298745]",Dublin City,"[['friday', 'DATE']]",11831,aisling_baker
+13:13:26,oh i didnt get the memo about fridays. you wait until next friday then. pink suit friday,[],"[-1.476463, 50.883056]",Southampton,"[['fridays', 'DATE'], ['next friday', 'DATE'], ['friday', 'DATE']]",11977,DanBuryTomorrow
