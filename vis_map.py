@@ -18,6 +18,7 @@ import time
 import json
 
 # 5 min window
+flag_5 = True
 list_of_files_5 = glob.glob('data/events/5_*.json') # * means all if need specific format then *.csv
 
 rgb_5 = pd.DataFrame()
@@ -26,6 +27,7 @@ color_5 = []
 data_5 = []
 
 if(len(list_of_files_5)>0):
+    flag_5 = False
     latest_file_5 = max(list_of_files_5, key=os.path.getctime)
     # print(latest_file)
     # data = pd.read_csv(latest_file_5)
@@ -49,12 +51,14 @@ if(len(list_of_files_5)>0):
 
 
 # 10 min window
+flag_10 = True
 list_of_files_10 = glob.glob('data/events/10_*.json') # * means all if need specific format then *.csv
 rgb_10 = pd.DataFrame()
 el_10 = []
 color_10 = []
 data_10 = []
 if(len(list_of_files_10)>0):
+    flag_10 = False
     latest_file_10 = max(list_of_files_10, key=os.path.getctime)
     # print(latest_file)
     # data = pd.read_csv(latest_file_5)
@@ -73,12 +77,14 @@ if(len(list_of_files_10)>0):
 
 
 # 60 min window
+flag_60 = True
 list_of_files_60 = glob.glob('data/events/60_*.json') # * means all if need specific format then *.csv
 rgb_60 = pd.DataFrame()
 el_60 = []
 color_60 = []
 data_60 = []
 if(len(list_of_files_10)>0):
+    flag_60 = False
     latest_file_60 = max(list_of_files_60, key=os.path.getctime)
     # print(latest_file)
     # data = pd.read_csv(latest_file_5)
@@ -141,12 +147,14 @@ layoutmap = dict(
         style="light",
         center=dict(lon=lonn, lat=latt),
         zoom=4,
+        showlegend = False,
     )
 )
 
 def layout():
 
     # 5 min window
+    flag_5 = True
     list_of_files_5 = glob.glob('data/events/5_*.json') # * means all if need specific format then *.csv
     
     rgb_5 = pd.DataFrame()
@@ -156,6 +164,7 @@ def layout():
     
 
     if(len(list_of_files_5)>0):
+        flag_5 = False
         latest_file_5 = max(list_of_files_5, key=os.path.getctime)
         # print(latest_file)
         # data = pd.read_csv(latest_file_5)
@@ -179,6 +188,7 @@ def layout():
 
 
     # 10 min window
+    flag_10 = True
     list_of_files_10 = glob.glob('data/events/10_*.json') # * means all if need specific format then *.csv
     rgb_10 = pd.DataFrame()
     el_10 = []
@@ -188,6 +198,7 @@ def layout():
     
 
     if(len(list_of_files_10)>0):
+        flag_10 = False
         latest_file_10 = max(list_of_files_10, key=os.path.getctime)
         # print(latest_file)
         # data = pd.read_csv(latest_file_5)
@@ -206,6 +217,7 @@ def layout():
 
 
     # 60 min window
+    flag_60 = True
     list_of_files_60 = glob.glob('data/events/60_*.json') # * means all if need specific format then *.csv
     rgb_60 = pd.DataFrame()
     el_60 = []
@@ -214,6 +226,7 @@ def layout():
     
     
     if(len(list_of_files_10)>0):
+        flag_60 = False
         latest_file_60 = max(list_of_files_60, key=os.path.getctime)
         # print(latest_file)
         # data = pd.read_csv(latest_file_5)
@@ -240,7 +253,9 @@ def layout():
     return html.Div([
     dcc.Tabs([
         dcc.Tab(
-            label='5 Minutes Window', children=[
+            label='5 Minutes Window', 
+            disabled=flag_5,
+            children=[
             html.H1(children='Event Visualization'),
 
             html.Label('Select the events to be '),
@@ -255,7 +270,9 @@ def layout():
             html.Button(dcc.Link('Click for topic visualization for 5 Min window',  href='/page-1', className='b1')),
         ]),
         dcc.Tab(
-            label='10 Minutes Window', children=[
+            label='10 Minutes Window', 
+            disabled=flag_10,
+            children=[
             html.H1(children='Event Visualization'),
 
             html.Label('Select the events to be '),
@@ -270,7 +287,9 @@ def layout():
             html.Button(dcc.Link('Click for topic visualization for 10 Min window"', href='/page-2', className='b1')),
         ]),
         dcc.Tab(
-            label='1 Hour Window', children=[
+            label='1 Hour Window', 
+            disabled=flag_60,
+            children=[
             html.H1(children='Event Visualization'),
 
             html.Label('Select the events to be '),
@@ -287,13 +306,13 @@ def layout():
     ]),
     dcc.Interval(
             id='interval-component',
-            interval=30*1000, # in milliseconds
+            interval=5*60*1000, # in milliseconds
             n_intervals=0
         ),
     dbc.Toast(
-            "This toast is placed in the top right ",
+            "New data is available, please reload the page",
             id="positioned-toast",
-            header="Positioned toast",
+            header="New Data",
             is_open=False,
             dismissable=True,
             icon="danger",

@@ -4,7 +4,8 @@ topics = 5
 words = 7
 
 [JSON]
-events ='data/events/'
+events = 'data/events/'
+topics = 'data/topics/'
 
 
 [DiscruptiveScoreThresholds]

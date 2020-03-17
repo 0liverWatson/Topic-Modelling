@@ -4,22 +4,26 @@ import csv
 import argparse
 from afinn import Afinn
 import json
-import config
 import time
 
 # class DisruptiveScore:
 
 #     def __init__(self):
 
-path = config.get('JSON', 'events')
+path = 'data/events/'
 
 def get_disruptive_score(data, window):
 
-    threshold = config.get('DiscruptiveScoreThresholds',str(window))
+    if window == 10:
+        threshold = 0.27
+    else:
+        threshold = 0.4
 
     all_data = convert_window_to_json(data)
 
     final_list = []
+    
+
     for event in all_data:
         df = pd.read_json(event['data'])
         # print(all_data[i].dropna(subset=['Text']))
@@ -43,6 +47,8 @@ def get_disruptive_score(data, window):
         if disruptive_score > threshold:
             final_list.append(df)
 
+
+    if len(final_list)>0:
         s1 = json.dumps(final_list)
         with open(path+str(window)+'_'+str(time.time())+'.json','w') as json_file:
             json.dump(s1, json_file)

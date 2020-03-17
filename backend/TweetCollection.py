@@ -15,6 +15,9 @@ import numpy as np
 import EventDetection
 from datetime import datetime
 
+import DiscruptiveScore as ds
+import dtm
+
 
 
 
@@ -134,22 +137,42 @@ class Tweet():
 # =============================================================================
 #         All the FUnctionality comes after this for integration
 # =============================================================================
-      
+
+            # print("####################")
+            # print("####################")
+            # print("####################")
+            # print("####################")
+            # print()
+            # print()
+
+            # print(len(self.Window_5_min.List_Of_Events))
+
+            # print()
+            # print()
+
+
+            # print("####################")
+            # print("####################")
+            # print("####################")
+            # print("####################")
+            
             disruptive_events_5 = ds.get_disruptive_score(self.Window_5_min.List_Of_Events, 5)
 
-            dtm.stream_reader(disruptive_events_5, 5)
+            dtm5 = dtm.TopicModelling(disruptive_events_5, 5)
+            dtm5.process_window()
 
             if(self.Window_10_min.Active):
                 disruptive_events_10 = ds.get_disruptive_score(self.Window_10_min.List_Of_Events, 10)
-                dtm.stream_reader(disruptive_events_10, 10)
-
+                dtm10 = dtm.TopicModelling(disruptive_events_10, 10)
+                dtm10.process_window()
                 # for i in range():
                 #     func disruption(self.Window_10_min.List_Of_Events[i][1])
                 #     pirn()name , score
 
             if(self.Window_1_hour.Active):
                 disruptive_events_60 = ds.get_disruptive_score(self.Window_1_hour.List_Of_Events, 60)
-                dtm.stream_reader(disruptive_events_60, 10)
+                dtm60 = dtm.TopicModelling(disruptive_events_60, 60)
+                dtm60.process_window()
         
         
         

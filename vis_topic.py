@@ -69,9 +69,6 @@ def layout(window):
 def layout_page1():
 
 
-    print("asdasd")
-
-
     return html.Div([
                     html.H2('Evolution of top bursty topics over the 5 Minutes window'),
                     html.H4('List of Bursting Events ( Select one to view the topic evolution ) '),

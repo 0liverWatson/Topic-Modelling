@@ -21,12 +21,11 @@ lemmatizer = WordNetLemmatizer()
 tokenizer = RegexpTokenizer(r'\w+')
 nltk.download('wordnet')
 
-import config
 
-path = config.get('JSON', 'topics')
-dtm_path = config.get('DTM', 'path')   
-num_topics = config.get('DTM', 'topics')
-top_n = config.get('DTM', 'words')
+path = 'data/topics/'
+dtm_path = '/dtm-win64.exe' 
+num_topics = 5
+top_n = 7
 
 class event_reader:
     def __init__(self, data, mins):   # change mins to window size       
@@ -104,11 +103,17 @@ class event_reader:
         final_list = []
         
         
-        for i in range(len(self.time_slices)):
-            ts = []
-            for j in range(num_topics):
-              ts.append(self.model.show_topic(j,i,top_n))  
-            final_list.append(ts)
+        # for i in range(len(self.time_slices)):
+        #     ts = []
+        #     for j in range(num_topics):
+        #       ts.append(self.model.show_topic(j,i,top_n))  
+        #     final_list.append(ts)
+        
+        for i in range(num_topics):
+            t = []
+            for j in range(len(self.time_slices)):
+                t.append(self.model.show_topic(i,j,top_n))
+            final_list.append(t)
         
         return final_list
 
@@ -161,11 +166,11 @@ class TopicModelling:
 
             final_list.append(obj)
 
-        s1 = json.dumps(final_list)
-        with open(path+str(self.window)+'_'+str(time.time())+'.json','w') as json_file:
-            json.dump(s1, json_file)
+        if len(final_list)>0:
+            s1 = json.dumps(final_list)
+            with open(path+str(self.window)+'_'+str(time.time())+'.json','w') as json_file:
+                json.dump(s1, json_file)
 
-        return final_list
 
 
 
