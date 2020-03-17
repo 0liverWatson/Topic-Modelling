@@ -14,8 +14,7 @@ import pandas as pd
 import numpy as np
 import EventDetection
 from datetime import datetime
-import DiscruptiveScore as ds
-import dtm
+
 
 
 
@@ -37,17 +36,20 @@ def get_wordnet_pos(word):
 
 def datetime_func(date_str):
     return datetime.strptime(date_str, '%H:%M:%S')
+
+
 class Tweet():
     def __init__(self):
         
         print("First Tweet Received...")
         self.count = 0
         self.flag = False
+        self.flag1 = 0
         self.Time = 0
         self.Window_5_min = EventDetection.EventDetectionClass(10)
         self.Window_10_min = EventDetection.EventDetectionClass(20)
         self.Window_1_hour = EventDetection.EventDetectionClass(50)
- 
+        
     
     def Tweet_Collection(self, tweet):
         Match = datetime_func(re.search(r'(\d+:\d+:\d+)', tweet['created_at']).group(1))
@@ -55,10 +57,12 @@ class Tweet():
             self.Time =  Match
             self.flag = True
         print((Match-self.Time).total_seconds())
+        
         if((Match-self.Time).total_seconds()>300):
             self.Window_10_min.Append_Data(RealTimeTweets)
             self.Window_1_hour.Append_Data(RealTimeTweets)
             self.Window_5_min.Append_Data(RealTimeTweets)
+            
             
             if(self.Window_1_hour.Count == 12):
                 RealTimeTweets.drop(RealTimeTweets.index, inplace=True)
@@ -84,7 +88,12 @@ class Tweet():
                     self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,Th)
                 else:
                     self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,self.Window_5_min.MinThreshold)
-          
+                    self.Window_5_min.DataFrame.drop(self.Window_5_min.DataFrame.index, inplace = True)
+                self.flag = False
+                
+                self.flag1 = 1
+                
+                
             
             elif(self.Window_10_min.Count == 2):
                 RealTimeTweets.drop(RealTimeTweets.index, inplace=True)
@@ -102,10 +111,15 @@ class Tweet():
                     Th = (len(self.Window_5_min.DataFrame)/100)*1
                     self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,Th)
                 else:
-                    self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,self.Window_5_min.MinThreshold)
-             
+                    self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,self.Window_5_min.MinThreshold) 
+                 
+                self.flag = False
+                self.flag1 = 2
+               
+                
             else:
                 RealTimeTweets.drop(RealTimeTweets.index, inplace=True)
+                
                 self.count = 0
                 self.Window_5_min.set_flag()
                 if(len(self.Window_5_min.DataFrame)>1000):
@@ -113,10 +127,14 @@ class Tweet():
                     self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,Th)
                 else:
                     self.Window_5_min.Event_Extraction(self.Window_5_min.DataFrame,self.Window_5_min.MinThreshold)
-        
-            # todo : add implementations
-            # 5 min processing
-
+                
+                self.flag = False
+                self.flag1 = 3
+                
+# =============================================================================
+#         All the FUnctionality comes after this for integration
+# =============================================================================
+      
             disruptive_events_5 = ds.get_disruptive_score(self.Window_5_min.List_Of_Events, 5)
 
             dtm.stream_reader(disruptive_events_5, 5)
@@ -134,7 +152,20 @@ class Tweet():
                 dtm.stream_reader(disruptive_events_60, 10)
         
         
-            
+        
+        
+# =============================================================================
+#       This is to empty dataframe and list of events after the visualization has been produced  
+# =============================================================================
+        if(self.flag1 == 1):
+            self.Window_10_min.Empty_DataFrame_Events()
+            self.Window_5_min.Empty_DataFrame_Events()
+            self.Window_1_hour.Empty_DataFrame_Events()
+        elif(self.flag1 == 2):
+            self.Window_10_min.Empty_DataFrame_Events()
+            self.Window_5_min.Empty_DataFrame_Events()
+        elif(self.flag1 == 3):
+            self.Window_5_min.Empty_DataFrame_Events()
         #The code below is to get data from twitter
         try:
             text = tweet['text']  #Filtering text and hashtags from the tweet

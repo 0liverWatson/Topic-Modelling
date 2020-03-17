@@ -32,9 +32,12 @@ class EventDetectionClass():
         
     def Append_Data(self,Data):
         self.DataFrame = pd.concat([self.DataFrame,Data],ignore_index=True)
+        print(self.DataFrame)
         self.Count +=1
        
-        
+    def Empty_DataFrame_Events(self):
+        self.DataFrame = pd.DataFrame(columns = ['Time','Text', 'Hashtages','Coordinates','City','Person_Name'])
+        self.List_Of_Events = []   
     def set_flag(self):
             self.Active = True 
 
@@ -42,19 +45,19 @@ class EventDetectionClass():
     def Event_Extraction(self,DF,Threshold):
     
         DF.dropna(axis=0, inplace = True) 
-        print(DF)
+      
+        print(Threshold)
         DF.to_csv("Rohma.csv")
         st = time.time()
         DF['Entities'] = DF['Text'].apply(lambda x: spacy_entity(x))
         print(time.time()-st)
         
         DF1 = DF.copy()
-        
         DF.dropna(axis=0, inplace = True)
         ##this is too delete empty text tweets
         DF['Text'] = DF['Text'].apply(lambda x: x.lower())
+            
         
-    
     # =============================================================================
     # 
     # Creation of Interted index of Entities
@@ -206,9 +209,12 @@ class EventDetectionClass():
         Square_Sum_Hashtags = 0
         Mean_Hashtags = 0
         Dummy = DF1.copy()
+        Dummy['Hashtages']  = Dummy['Hashtages'].astype('str')
         Dummy1 = Dummy[Dummy['Hashtages'] == '[]'] #removing tweets without any hashtag
-        Dummy.drop(index = Dummy1.index, inplace = True, axis = 0)
+       
         
+            #print(Dummy.iloc[i]['Hashtages']," ",Dummy1.iloc[i]['Hashtages'])            
+        Dummy.drop(index = Dummy1.index, inplace = True, axis = 0)
         Dummy1["Entities"].isna().sum()
         indexes  = list(range(0,len(Dummy)))
         Dummy['index'] = indexes  #creating a dummy index
@@ -219,8 +225,6 @@ class EventDetectionClass():
         Hashtags_Inverted_Index = []
         
         for index in Dummy.index:
-            print(Dummy['Hashtages'])
-            print(index,"  ",ast.literal_eval(Dummy.iloc[index]['Hashtages']))
             Hashtag_list = ast.literal_eval(Dummy.iloc[index]['Hashtages'])
     
             for Hashtag in Hashtag_list:
@@ -248,7 +252,9 @@ class EventDetectionClass():
         Window_5_Min_hashtag = []
         for i in range(0,len(Hashtags_Inverted_Index)):
             if(len(Hashtags_Inverted_Index[i])> Bursty_Score_Hashtags):
+                print(All_Hastags[i], len(Hashtags_Inverted_Index[i]))
                 Sub_DataFrame = Dummy[Dummy['indexes'].isin(Hashtags_Inverted_Index[i])]
+                
                 Window_5_Min_hashtag.append([All_Hastags[i],Sub_DataFrame])
            
     # =============================================================================
@@ -257,7 +263,6 @@ class EventDetectionClass():
        
         list_of_Hashtag_Nodes = []
         for i in range (0,len(Window_5_Min_hashtag)):
-            print(Window_5_Min_hashtag[i][0])
             list_of_Hashtag_Nodes.append(Node(Window_5_Min_hashtag[i][0],i)) 
     
         
@@ -312,7 +317,7 @@ class EventDetectionClass():
         for i in range (0,len(Window_5_Min_hashtag)):
             Name =  Window_5_Min_hashtag[i][0]
             length = len(Window_5_Min_hashtag[i][1])
-            ConCat_DataFrame = pd.DataFrame(columns = ['Time', 'Text', 'Hashtages', 'Coordinates', 'City', 'Entities','indexes'])
+            ConCat_DataFrame = pd.DataFrame(columns = ['Time','Text', 'Hashtages','Coordinates','City','Person_Name'])
             printval = list_of_Hashtag_Nodes[i]
             check = False
             check1 = False
@@ -356,7 +361,7 @@ class EventDetectionClass():
                 Window_5_Min_All_Events[j][1] =  Window_5_Min_All_Events[j][1][~Window_5_Min_All_Events[j][1]['indexes'].isin(Intersection)]       
                    
        #All_Event_Window_5 = [x for x in Window_5_Min_All_Events if ((len(x[1])>Bursty_Score_Hashtags) and (len(x[1])>10))]
-            self.List_Of_Events = [x for x in Window_5_Min_All_Events if len(x[1])>Threshold]
+            self.List_Of_Events = [x for x in Window_5_Min_All_Events if len(x[1])>=Threshold]
             
        
        
