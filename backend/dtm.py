@@ -28,7 +28,7 @@ num_topics = 5
 top_n = 7
 
 class event_reader:
-    def __init__(self, data, mins):   # change mins to window size       
+    def __init__(self, data, mins):      
         
         data['Time'] = pd.to_datetime(data['Time'])
         data['pText'] = self.preprocess(data['Text'])        
@@ -36,7 +36,13 @@ class event_reader:
         
         self.start_time = data.Time.min()
         self.end_time = data.Time.max()
-        self.timeslice = mins   # calculate timeslice based on window size
+        
+        if mins == 5:
+            self.timeslice = 1
+        elif  mins == 10:
+            self.timeslice = 2
+        else:
+            self.timeslice = 6
 
         self.flat_list, self.time_slices = self.split_to_timeslices()
 

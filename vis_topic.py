@@ -151,7 +151,7 @@ def update_fig5min(selectedevent):
     for i in range(len(df)):
         df1 = df.iloc[i, 1]
         dd = pd.DataFrame(df1).T
-        traces = [];
+        traces = []
         number_of_colors = 20
         for (columnName, columnData) in dd.iteritems():
             traces.append(
@@ -208,37 +208,57 @@ def update_options(selectedevent):
     Input('opt-dropdown_5min', 'value')]
 )
 def update_fig5min_topics(selectedtopic,selectedevent):
-    el5 = []
-    topic5 = []
-    traces = [];
+    traces = []
+    if selectedtopic:
+        el5 = []
+        topic5 = []
 
-    list_of_files_5 = glob.glob('data/topics/5_*.json')
-    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+        list_of_files_5 = glob.glob('data/topics/5_*.json')
+        latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
-    with open(latest_file_5) as json_file:
-        json_str = json.load(json_file)
-    data_5 = json.loads(json_str)
+        with open(latest_file_5) as json_file:
+            json_str = json.load(json_file)
+        data_5 = json.loads(json_str)
 
-    for i in data_5:
-        if (i['event_name'] == selectedevent):
-            el5.append(i['event_name'])
-            topic5.append(i['topics'])
-    df = pd.DataFrame([el5, topic5]).T
+        for i in data_5:
+            if (i['event_name'] == selectedevent):
+                el5.append(i['event_name'])
+                topic5.append(i['topics'])
+        df = pd.DataFrame([el5, topic5]).T
 
-    tempdf = df[1][0]
-    df2 = tempdf[2]
-    for k in range(len(df2)):
-        # print(df2[k])
-        df3 = pd.DataFrame(df2[k])
-        df3.columns = ['key_strength', 'keyword']
-        final_df3 = df3.sort_values(by=['keyword'])
-        traces.append(
-            go.Bar(
-                x=[0.5, 1, 1.5, 2, 2.5],
-                y=final_df3['key_strength'],
-                name=final_df3['keyword'],
-                opacity=0.5
-            ))
+        tempdf = df[1][0]
+        df2 = tempdf[selectedtopic]
+        # for k in range(len(df2)):
+        #     # print(df2[k])
+        #     df3 = pd.DataFrame(df2[k])
+        #     df3.columns = ['key_strength', 'keyword']
+        #     final_df3 = df3.sort_values(by=['keyword'])
+        #     traces.append(
+        #         go.Bar(
+        #             x=[0.5, 1, 1.5, 2, 2.5],
+        #             y=final_df3['key_strength'],
+        #             name=final_df3['keyword'],
+        #             opacity=0.5
+        #         ))
+        df3 = {}
+
+        for timeslice in df2:
+            ts = {e[1]:e[0] for e in timeslice}
+        
+            if len(df3) == 0:
+                for word, p in ts.items():
+                    df3[word] = [p]
+            else:
+                for word, p in ts.items():
+                    df3[word].append(p)
+        for word, p in df3.items():
+            traces.append(
+                go.Bar(
+                    x=[0.5, 1, 1.5, 2, 2.5],
+                    y=p,
+                    name=word,
+                    opacity=0.5
+                ))
     return {
         'data': traces,
         'layout': {
