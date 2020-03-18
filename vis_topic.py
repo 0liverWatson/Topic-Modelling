@@ -165,15 +165,28 @@ def update_fig5min(selectedevent):
                 ))
         return {
             'data': traces,
-            'layout': {
-                'title': 'Visualization of Topic Evolution',
-                 # dict(
-                 #            xaxis={
-                 #                'title': 'xaxis_column_name'
-                 #
-                 #            }
-                 #    )
-            },
+            'layout': go.Layout(
+                xaxis={
+                    'title': 'Time slice',
+                    'type': 'linear'
+
+                },
+                yaxis={
+                    'title': 'Strength of Topics',
+                    'type': 'linear'
+
+                },
+                title='Visualization of Topic Evolution'
+            )
+            # 'layout': {
+            #     'title': 'Visualization of Topic Evolution',
+            #      # dict(
+            #      #            xaxis={
+            #      #                'title': 'xaxis_column_name'
+            #      #
+            #      #            }
+            #      #    )
+            # },
 
             }
 
@@ -270,10 +283,24 @@ def update_fig5min_topics(selectedtopic, selectedevent):
                 ))
     return {
         'data': traces,
-        'layout': {
-            'title': 'Visualization of Keyword Evolution',
-            'barmode': 'stack'
-        },
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Distribution of keywords',
+                'type': 'linear'
+
+            },
+            title='Visualization of Topic Evolution',
+            barmode='stack'
+        )
+        # 'layout': {
+        #     'title': 'Visualization of Keyword Evolution',
+        #     'barmode': 'stack'
+        # },
     }
 # --------------------------------------------------------------------------------------------------
 
@@ -348,9 +375,19 @@ def update_fig5min(selectedevent):
                 ))
         return {
             'data': traces,
-            'layout': {
-                'title': 'Visualization of Topic Evolution'
-            },
+            'layout': go.Layout(
+                xaxis={
+                    'title': 'Time slice',
+                    'type': 'linear'
+
+                },
+                yaxis={
+                    'title': 'Strength of Topics',
+                    'type': 'linear'
+
+                },
+                title='Visualization of Topic Evolution'
+            )
         }
 
 
@@ -445,10 +482,20 @@ def update_fig5min_topics(selectedtopic, selectedevent):
                 ))
     return {
         'data': traces,
-        'layout': {
-            'title': 'Visualization of Keyword Evolution',
-            'barmode': 'stack'
-        },
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Distribution of keywords',
+                'type': 'linear'
+
+            },
+            title='Visualization of Topic Evolution',
+            barmode='stack'
+        )
     }
 # --------------------------------------------------------------------------------------------------
 
@@ -522,9 +569,19 @@ def update_fig5min(selectedevent):
                 ))
         return {
             'data': traces,
-            'layout': {
-                'title': 'Visualization of Topic Evolution'
-            },
+            'layout': go.Layout(
+                xaxis={
+                    'title': 'Time slice',
+                    'type': 'linear'
+
+                },
+                yaxis={
+                    'title': 'Strength of Topics',
+                    'type': 'linear'
+
+                },
+                title='Visualization of Topic Evolution'
+            )
         }
 
 
@@ -620,9 +677,19 @@ def update_fig5min_topics(selectedtopic, selectedevent):
                 ))
     return {
         'data': traces,
-        'layout': {
-            'title': 'Visualization of Keyword Evolution',
-            'barmode': 'stack'
-        },
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Distribution of keywords',
+                'type': 'linear'
+
+            },
+            title='Visualization of Topic Evolution',
+            barmode='stack'
+        )
     }
 # --------------------------------------------------------------------------------------------------
