@@ -60,7 +60,7 @@ layout_page1 = html.Div([
         dcc.Graph(id='5min1_keyword')
     ], style={'display': 'inline-block', 'width': '49%'}),
     html.Div([
-        html.Img(id="image_wc")
+        html.Img(id="image_wc5")
     ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
@@ -72,7 +72,16 @@ layout_page2 = html.Div([
         id='opt-dropdown_10min'
     ),
     dcc.Graph(id='10min1_event'),
-    dcc.Graph(id='10min1_topic')
+    dcc.Graph(id='10min1_topic'),
+    dcc.RadioItems(id='radio10',
+                       labelStyle={'display': 'inline-block'}
+                       ),
+    html.Div([
+        dcc.Graph(id='10min1_keyword')
+    ], style={'display': 'inline-block', 'width': '49%'}),
+    html.Div([
+        html.Img(id="image_wc10")
+    ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
 layout_page3 = html.Div([
@@ -83,7 +92,16 @@ layout_page3 = html.Div([
         id='opt-dropdown_60min'
     ),
     dcc.Graph(id='60min1_event'),
-    dcc.Graph(id='60min1_topic')
+    dcc.Graph(id='60min1_topic'),
+    dcc.RadioItems(id='radio60',
+                       labelStyle={'display': 'inline-block'}
+                       ),
+    html.Div([
+        dcc.Graph(id='60min1_keyword')
+    ], style={'display': 'inline-block', 'width': '49%'}),
+    html.Div([
+        html.Img(id="image_wc60")
+    ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
 def plot_wordcloud(data):
@@ -91,9 +109,9 @@ def plot_wordcloud(data):
     wc = WordCloud(background_color='white', width=480, height=360)
     wc.fit_words(d)
     return wc.to_image()
-
-@app.callback(Output('image_wc', 'src'),
-              [Input('image_wc', 'id'),
+#-----------WORD CLOUD-------------------------------------------------------------
+@app.callback(Output('image_wc5', 'src'),
+              [Input('image_wc5', 'id'),
                Input('5min1_event', 'clickData'),
                Input('opt-dropdown_5min', 'value')
                ])
@@ -104,6 +122,145 @@ def make_image(b,clickData,selectedevent):
     topic5 = []
     #
     list_of_files_5 = glob.glob('data/topics/5_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+
+    dict2 = {}
+    for key in new_dict:
+        dict2[key] = sum(new_dict[key])
+
+    kk = list(dict2.keys())
+    kk1 = list(dict2.values())
+
+    dfm = pd.DataFrame({'word': kk, 'freq': kk1})
+    img = BytesIO()
+    plot_wordcloud(data=dfm).save(img, format='PNG')
+    return 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+#----------------WC:10min--------------------------------------------------------------
+@app.callback(Output('image_wc10', 'src'),
+              [Input('image_wc10', 'id'),
+               Input('10min1_event', 'clickData'),
+               Input('opt-dropdown_10min', 'value')
+               ])
+def make_image(b,clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/10_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+
+    dict2 = {}
+    for key in new_dict:
+        dict2[key] = sum(new_dict[key])
+
+    kk = list(dict2.keys())
+    kk1 = list(dict2.values())
+
+    dfm = pd.DataFrame({'word': kk, 'freq': kk1})
+    img = BytesIO()
+    plot_wordcloud(data=dfm).save(img, format='PNG')
+    return 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
+
+#----------------------WC:60------------------------------------------------------------
+@app.callback(Output('image_wc60', 'src'),
+              [Input('image_wc60', 'id'),
+               Input('60min1_event', 'clickData'),
+               Input('opt-dropdown_60min', 'value')
+               ])
+def make_image(b,clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/60_*.json')
     latest_file_5 = max(list_of_files_5, key=os.path.getctime)
     #
     with open(latest_file_5) as json_file:
@@ -196,20 +353,21 @@ def but1_click1(n):
     [Input('opt-dropdown_5min', 'value')]
 )
 def update_fig5min(selectedevent):
-    my_colors = [  ## add the standard plotly colors
-        '#85C1E9',
-        '#858FE9',
-        '#AD85E9',
-        '#DF85E9',
-        '#E985C1',
-        '#E9858F',
-        '#E98D85',
-        '#E98D85',
-        '#E1E985',
-        '#AFE985'
-    ]
+    # my_colors = [  ## add the standard plotly colors
+    #     '#85C1E9',
+    #     '#858FE9',
+    #     '#AD85E9',
+    #     '#DF85E9',
+    #     '#E985C1',
+    #     '#E9858F',
+    #     '#E98D85',
+    #     '#E98D85',
+    #     '#E1E985',
+    #     '#AFE985'
+    # ]
     el5 = []
     strength5 = []
+    traces=[]
     list_of_files_5 = glob.glob('data/topics/5_*.json')
     latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
@@ -222,46 +380,42 @@ def update_fig5min(selectedevent):
             strength5.append(i['strengths'])
     df = pd.DataFrame([el5, strength5]).T
 
-    for i in range(len(df)):
-        df1 = df.iloc[i, 1]
-        dd = pd.DataFrame(df1).T
-        traces = []
-        number_of_colors = 20
-        for (columnName, columnData),c in zip(dd.iteritems(),my_colors):
-            traces.append(
-                go.Scatter(
-                    x=[1,2,3,4,5],
-                    y=columnData.values,
-                    type='scatter',
-                    # mode='lines',
-                    mode='markers',
-                    line=dict(width=0.5,color=c),
-                    stackgroup='one',
-                    fill='tonexty',
-                    name=columnName,
-                    opacity=0
+    strength5_new = list(map(list, zip(*strength5[0])))
 
+    print(len(strength5_new))
+    for i, vals in enumerate(strength5_new):
+        traces.append(
+            go.Scatter(
+                x=[1, 2, 3, 4, 5, 6],
+                y=vals,
+                type='scatter',
+                mode='markers',
+                line=dict(width=0.5),
+                stackgroup='one',
+                fill='tonexty',
+                name=i,
+                opacity=1
 
-                ))
-        return {
-            'data': traces,
-            'layout': go.Layout(
-                xaxis={
-                    'title': 'Time slice',
-                    'type': 'linear'
+            ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
 
-                },
-                yaxis={
-                    'title': 'Strength of Topics',
-                    'type': 'linear'
+            },
+            yaxis={
+                'title': 'Strength of Topics',
+                'type': 'linear'
 
-                },
-                title='Visualization of Topic Evolution',
-                hovermode='closest',
-                clickmode='event+select'
-            )
+            },
+            title='Visualization of Topics Evolution',
+            hovermode='closest',
+            clickmode='event+select'
+        )
 
-            }
+    }
 
 @app.callback(
     Output('5min1_topic', 'figure'),
@@ -329,7 +483,8 @@ def display_click_data(clickData,selectedevent):
                 x=[1, 2, 3, 4, 5],
                 y=p,
                 name=word,
-                opacity=0.5
+                opacity=1,
+                # marker=dict(color='MediumPurple')
             ))
     return {
         'data': traces,
@@ -344,8 +499,10 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topic Evolution',
-            barmode='stack'
+            title='Visualization of Distribution of keywords',
+            barmode='stack',
+            colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
+            # colorway ='BluYl_4'
         )
     }
 
@@ -488,85 +645,86 @@ def keyword_plot5(selectedevent,clickData, selectedkeyword):
 )
 def but1_click1(n):
     if n:
-        list_of_files_10 = glob.glob('data/topics/10_*.json')
-        latest_file_10 = max(list_of_files_10, key=os.path.getctime)
+        list_of_files_5 = glob.glob('data/topics/10_*.json')
+        latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
-        with open(latest_file_10) as json_file:
+        with open(latest_file_5) as json_file:
             json_str = json.load(json_file)
-        data_10 = json.loads(json_str)
-        el10 = []
-        for m in data_10:
-            el10.append(m['event_name'])
-        return [{'label': opt, 'value': opt} for opt in el10]
+        data_5 = json.loads(json_str)
+        el5 = []
+        for m in data_5:
+            el5.append(m['event_name'])
+        return [{'label': opt, 'value': opt} for opt in el5]
 
 
 @app.callback(
     Output('10min1_event', 'figure'),
     [Input('opt-dropdown_10min', 'value')]
 )
-def update_fig10min(selectedevent):
-    my_colors = [  ## add the standard plotly colors
-        '#85C1E9',
-        '#858FE9',
-        '#AD85E9',
-        '#DF85E9',
-        '#E985C1',
-        '#E9858F',
-        '#E98D85',
-        '#E98D85',
-        '#E1E985',
-        '#AFE985'
-    ]
-    el10 = []
-    strength10 = []
-    list_of_files_10 = glob.glob('data/topics/10_*.json')
-    latest_file_10 = max(list_of_files_10, key=os.path.getctime)
+def update_fig5min(selectedevent):
+    # my_colors = [  ## add the standard plotly colors
+    #     '#85C1E9',
+    #     '#858FE9',
+    #     '#AD85E9',
+    #     '#DF85E9',
+    #     '#E985C1',
+    #     '#E9858F',
+    #     '#E98D85',
+    #     '#E98D85',
+    #     '#E1E985',
+    #     '#AFE985'
+    # ]
+    el5 = []
+    strength5 = []
+    traces=[]
+    list_of_files_5 = glob.glob('data/topics/10_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
-    with open(latest_file_10) as json_file:
+    with open(latest_file_5) as json_file:
         json_str = json.load(json_file)
-    data_10 = json.loads(json_str)
-    for i in data_10:
+    data_5 = json.loads(json_str)
+    for i in data_5:
         if (i['event_name'] == selectedevent):
-            el10.append(i['event_name'])
-            strength10.append(i['strengths'])
-    df = pd.DataFrame([el10, strength10]).T
+            el5.append(i['event_name'])
+            strength5.append(i['strengths'])
+    df = pd.DataFrame([el5, strength5]).T
 
-    for i in range(len(df)):
-        df1 = df.iloc[i, 1]
-        dd = pd.DataFrame(df1).T
-        traces = []
-        for (columnName, columnData),c in zip(dd.iteritems(),my_colors):
-            traces.append(
-                go.Scatter(
-                    x=[2,4,6,8,10],
-                    y=columnData.values,
-                    type='scatter',
-                    mode='markers',
-                    line=dict(width=0.5,color=c),
-                    stackgroup='one',
-                    fill='tonexty',
-                    name=columnName,
-                    opacity=0
-                ))
-        return {
-            'data': traces,
-            'layout': go.Layout(
-                xaxis={
-                    'title': 'Time slice',
-                    'type': 'linear'
+    strength5_new = list(map(list, zip(*strength5[0])))
 
-                },
-                yaxis={
-                    'title': 'Strength of Topics',
-                    'type': 'linear'
+    print(len(strength5_new))
+    for i, vals in enumerate(strength5_new):
+        traces.append(
+            go.Scatter(
+                x=[2,4,6,8,10],
+                y=vals,
+                type='scatter',
+                mode='markers',
+                line=dict(width=0.5),
+                stackgroup='one',
+                fill='tonexty',
+                name=i,
+                opacity=1
 
-                },
-                title='Visualization of Topic Evolution',
-                hovermode='closest',
-                clickmode='event+select'
-            )
+            ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
 
-            }
+            },
+            yaxis={
+                'title': 'Strength of Topics',
+                'type': 'linear'
+
+            },
+            title='Visualization of Topics Evolution',
+            hovermode='closest',
+            clickmode='event+select'
+        )
+
+    }
 
 @app.callback(
     Output('10min1_topic', 'figure'),
@@ -574,24 +732,25 @@ def update_fig10min(selectedevent):
     Input('opt-dropdown_10min', 'value')])
 def display_click_data(clickData,selectedevent):
     selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
-
+    # print(m)
+    # print(selectedevent)
     traces = []
-    el10 = []
-    topic10 = []
-
-    list_of_files_10 = glob.glob('data/topics/10_*.json')
-    latest_file_10 = max(list_of_files_10, key=os.path.getctime)
+    el5 = []
+    topic5 = []
     #
-    with open(latest_file_10) as json_file:
+    list_of_files_5 = glob.glob('data/topics/10_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
         json_str = json.load(json_file)
-    data_10 = json.loads(json_str)
+    data_5 = json.loads(json_str)
     #
-    for i in data_10:
+    for i in data_5:
         if (i['event_name'] == selectedevent):
-            el10.append(i['event_name'])
-            topic10.append(i['topics'])
-    df = pd.DataFrame([el10, topic10]).T
-
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
     tempdf = df[1][0]
     df2 = tempdf[selected_topic]
 
@@ -633,7 +792,8 @@ def display_click_data(clickData,selectedevent):
                 x=[2,4,6,8,10],
                 y=p,
                 name=word,
-                opacity=0.5,
+                opacity=1,
+                # marker=dict(color='MediumPurple')
             ))
     return {
         'data': traces,
@@ -648,16 +808,138 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topic Evolution',
-            barmode='stack'
+            title='Visualization of Distribution of keywords',
+            barmode='stack',
+            colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
+            # colorway ='BluYl_4'
         )
     }
 
+@app.callback(
+    Output('radio10', 'options'),
+    [Input('10min1_event', 'clickData'),
+     Input('opt-dropdown_10min', 'value')]
+)
+def radio_options5(clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/10_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+    return [{'label': opt, 'value': opt} for opt in mylist]
+
+#5min1_keyword
+@app.callback(
+    Output('10min1_keyword', 'figure'),
+    [Input('opt-dropdown_10min', 'value'),
+     Input('10min1_event', 'clickData'),
+     Input('radio10', 'value')]
+)
+
+def keyword_plot5(selectedevent,clickData, selectedkeyword):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/10_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+    keyword_val = new_dict[selectedkeyword]
+    print(keyword_val)
+    traces.append(
+        go.Scatter(
+            x=[2,4,6,8,10],
+            y=keyword_val,
+            mode='lines+markers',
+            name=selectedkeyword
+
+        ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Strength of Keyword',
+                'type': 'linear'
+
+            },
+            title='Visualization of Keyword Evolution'
+        )
+
+    }
 # For 60 minutes window
 # ----------------------------------------------------------------------------------------
 # Callback for Fig 1 - Evolution of topics in an event
 # ----------------------------------------------------
-
+#
 # @app.callback(
 #     Output('head1', 'value'),
 #     [Input('but1', 'n_clicks')]
@@ -672,85 +954,86 @@ def display_click_data(clickData,selectedevent):
 )
 def but1_click1(n):
     if n:
-        list_of_files_60 = glob.glob('data/topics/60_*.json')
-        latest_file_60 = max(list_of_files_60, key=os.path.getctime)
+        list_of_files_5 = glob.glob('data/topics/60_*.json')
+        latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
-        with open(latest_file_60) as json_file:
+        with open(latest_file_5) as json_file:
             json_str = json.load(json_file)
-        data_60 = json.loads(json_str)
-        el60 = []
-        for m in data_60:
-            el60.append(m['event_name'])
-        return [{'label': opt, 'value': opt} for opt in el60]
+        data_5 = json.loads(json_str)
+        el5 = []
+        for m in data_5:
+            el5.append(m['event_name'])
+        return [{'label': opt, 'value': opt} for opt in el5]
 
 
 @app.callback(
     Output('60min1_event', 'figure'),
     [Input('opt-dropdown_60min', 'value')]
 )
-def update_fig60min(selectedevent):
-    my_colors = [  ## add the standard plotly colors
-        '#85C1E9',
-        '#858FE9',
-        '#AD85E9',
-        '#DF85E9',
-        '#E985C1',
-        '#E9858F',
-        '#E98D85',
-        '#E98D85',
-        '#E1E985',
-        '#AFE985'
-    ]
-    el60 = []
-    strength60 = []
-    list_of_files_60 = glob.glob('data/topics/60_*.json')
-    latest_file_60 = max(list_of_files_60, key=os.path.getctime)
+def update_fig5min(selectedevent):
+    # my_colors = [  ## add the standard plotly colors
+    #     '#85C1E9',
+    #     '#858FE9',
+    #     '#AD85E9',
+    #     '#DF85E9',
+    #     '#E985C1',
+    #     '#E9858F',
+    #     '#E98D85',
+    #     '#E98D85',
+    #     '#E1E985',
+    #     '#AFE985'
+    # ]
+    el5 = []
+    strength5 = []
+    traces=[]
+    list_of_files_5 = glob.glob('data/topics/60_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
 
-    with open(latest_file_60) as json_file:
+    with open(latest_file_5) as json_file:
         json_str = json.load(json_file)
-    data_60 = json.loads(json_str)
-    for i in data_60:
+    data_5 = json.loads(json_str)
+    for i in data_5:
         if (i['event_name'] == selectedevent):
-            el60.append(i['event_name'])
-            strength60.append(i['strengths'])
-    df = pd.DataFrame([el60, strength60]).T
+            el5.append(i['event_name'])
+            strength5.append(i['strengths'])
+    df = pd.DataFrame([el5, strength5]).T
 
-    for i in range(len(df)):
-        df1 = df.iloc[i, 1]
-        dd = pd.DataFrame(df1).T
-        traces = []
-        for (columnName, columnData),c in zip(dd.iteritems(),my_colors):
-            traces.append(
-                go.Scatter(
-                    x=[10,20,30,40,50,60],
-                    y=columnData.values,
-                    type='scatter',
-                    mode='markers',
-                    line=dict(width=0.5,color=c),
-                    stackgroup='one',
-                    fill='tonexty',
-                    name=columnName,
-                    opacity=0
-                ))
-        return {
-            'data': traces,
-            'layout': go.Layout(
-                xaxis={
-                    'title': 'Time slice',
-                    'type': 'linear'
+    strength5_new = list(map(list, zip(*strength5[0])))
 
-                },
-                yaxis={
-                    'title': 'Strength of Topics',
-                    'type': 'linear'
+    print(len(strength5_new))
+    for i, vals in enumerate(strength5_new):
+        traces.append(
+            go.Scatter(
+                x=[10, 20, 30, 40, 50, 60],
+                y=vals,
+                type='scatter',
+                mode='markers',
+                line=dict(width=0.5),
+                stackgroup='one',
+                fill='tonexty',
+                name=i,
+                opacity=1
 
-                },
-                title='Visualization of Topic Evolution',
-                hovermode='closest',
-                clickmode='event+select'
-            )
+            ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
 
-            }
+            },
+            yaxis={
+                'title': 'Strength of Topics',
+                'type': 'linear'
+
+            },
+            title='Visualization of Topics Evolution',
+            hovermode='closest',
+            clickmode='event+select'
+        )
+
+    }
 
 @app.callback(
     Output('60min1_topic', 'figure'),
@@ -758,24 +1041,25 @@ def update_fig60min(selectedevent):
     Input('opt-dropdown_60min', 'value')])
 def display_click_data(clickData,selectedevent):
     selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
-
+    # print(m)
+    # print(selectedevent)
     traces = []
-    el60 = []
-    topic60 = []
-
-    list_of_files_60 = glob.glob('data/topics/60_*.json')
-    latest_file_60 = max(list_of_files_60, key=os.path.getctime)
+    el5 = []
+    topic5 = []
     #
-    with open(latest_file_60) as json_file:
+    list_of_files_5 = glob.glob('data/topics/60_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
         json_str = json.load(json_file)
-    data_60 = json.loads(json_str)
+    data_5 = json.loads(json_str)
     #
-    for i in data_60:
+    for i in data_5:
         if (i['event_name'] == selectedevent):
-            el60.append(i['event_name'])
-            topic60.append(i['topics'])
-    df = pd.DataFrame([el60, topic60]).T
-
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
     tempdf = df[1][0]
     df2 = tempdf[selected_topic]
 
@@ -814,10 +1098,11 @@ def display_click_data(clickData,selectedevent):
         # newp = [x / maxp for x in p]
         traces.append(
             go.Bar(
-                x=[10,20,30,40,50,60],
+                x=[10, 20, 30, 40, 50,60],
                 y=p,
                 name=word,
-                opacity=0.5,
+                opacity=1,
+                # marker=dict(color='MediumPurple')
             ))
     return {
         'data': traces,
@@ -832,8 +1117,131 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topic Evolution',
-            barmode='stack'
+            title='Visualization of Distribution of keywords',
+            barmode='stack',
+            colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
+            # colorway ='BluYl_4'
         )
+    }
+
+@app.callback(
+    Output('radio60', 'options'),
+    [Input('60min1_event', 'clickData'),
+     Input('opt-dropdown_60min', 'value')]
+)
+def radio_options5(clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/60_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+    return [{'label': opt, 'value': opt} for opt in mylist]
+
+#5min1_keyword
+@app.callback(
+    Output('60min1_keyword', 'figure'),
+    [Input('opt-dropdown_60min', 'value'),
+     Input('60min1_event', 'clickData'),
+     Input('radio60', 'value')]
+)
+
+def keyword_plot5(selectedevent,clickData, selectedkeyword):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/60_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+    keyword_val = new_dict[selectedkeyword]
+    print(keyword_val)
+    traces.append(
+        go.Scatter(
+            x=[10, 20, 30, 40, 50,60],
+            y=keyword_val,
+            mode='lines+markers',
+            name=selectedkeyword
+
+        ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Strength of Keyword',
+                'type': 'linear'
+
+            },
+            title='Visualization of Keyword Evolution'
+        )
+
     }
 
