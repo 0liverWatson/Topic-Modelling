@@ -70,7 +70,7 @@ class event_reader:
         time_slices = []
 
         st = self.start_time
-        et = st + pd.Timedelta(minutes=self.timeslice)
+        et = st  # + pd.Timedelta(minutes=self.timeslice)
 
         df = self.data
 
