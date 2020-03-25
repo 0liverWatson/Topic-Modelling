@@ -9,10 +9,12 @@ import os
 from app import app
 import json
 import copy
+from io import BytesIO
+from wordcloud import WordCloud
+import base64
 
 # Extract the events for all the windows
 # --------------------------------------
-
 # #5 minutes window
 # -----------------
 list_of_files_5 = glob.glob('data/topics/5_*.json')
@@ -50,7 +52,16 @@ layout_page1 = html.Div([
         id='opt-dropdown_5min'
     ),
     dcc.Graph(id='5min1_event'),
-    dcc.Graph(id='5min1_topic')
+    dcc.Graph(id='5min1_topic'),
+    dcc.RadioItems(id='radio5',
+                       labelStyle={'display': 'inline-block'}
+                       ),
+    html.Div([
+        dcc.Graph(id='5min1_keyword')
+    ], style={'display': 'inline-block', 'width': '49%'}),
+    html.Div([
+        html.Img(id="image_wc")
+    ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
 layout_page2 = html.Div([
@@ -75,6 +86,80 @@ layout_page3 = html.Div([
     dcc.Graph(id='60min1_topic')
 ])
 
+def plot_wordcloud(data):
+    d = {a: x for a, x in data.values}
+    wc = WordCloud(background_color='white', width=480, height=360)
+    wc.fit_words(d)
+    return wc.to_image()
+
+@app.callback(Output('image_wc', 'src'),
+              [Input('image_wc', 'id'),
+               Input('5min1_event', 'clickData'),
+               Input('opt-dropdown_5min', 'value')
+               ])
+def make_image(b,clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/5_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+
+    dict2 = {}
+    for key in new_dict:
+        dict2[key] = sum(new_dict[key])
+
+    kk = list(dict2.keys())
+    kk1 = list(dict2.values())
+
+    dfm = pd.DataFrame({'word': kk, 'freq': kk1})
+    img = BytesIO()
+    plot_wordcloud(data=dfm).save(img, format='PNG')
+    return 'data:image/png;base64,{}'.format(base64.b64encode(img.getvalue()).decode())
 # For 5 minutes window
 # ----------------------------------------------------------------------------------------
 # Callback for Fig 1 - Evolution of topics in an event
@@ -244,7 +329,7 @@ def display_click_data(clickData,selectedevent):
                 x=[1, 2, 3, 4, 5],
                 y=p,
                 name=word,
-                opacity=0.5,
+                opacity=0.5
             ))
     return {
         'data': traces,
@@ -264,6 +349,126 @@ def display_click_data(clickData,selectedevent):
         )
     }
 
+@app.callback(
+    Output('radio5', 'options'),
+    [Input('5min1_event', 'clickData'),
+     Input('opt-dropdown_5min', 'value')]
+)
+def radio_options5(clickData,selectedevent):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/5_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+    return [{'label': opt, 'value': opt} for opt in mylist]
+
+#5min1_keyword
+@app.callback(
+    Output('5min1_keyword', 'figure'),
+    [Input('opt-dropdown_5min', 'value'),
+     Input('5min1_event', 'clickData'),
+     Input('radio5', 'value')]
+)
+
+def keyword_plot5(selectedevent,clickData, selectedkeyword):
+    selected_topic = json.loads(json.dumps(json.loads(json.dumps(clickData))['points']))[0]['curveNumber']
+    traces = []
+    el5 = []
+    topic5 = []
+    #
+    list_of_files_5 = glob.glob('data/topics/5_*.json')
+    latest_file_5 = max(list_of_files_5, key=os.path.getctime)
+    #
+    with open(latest_file_5) as json_file:
+        json_str = json.load(json_file)
+    data_5 = json.loads(json_str)
+    #
+    for i in data_5:
+        if (i['event_name'] == selectedevent):
+            el5.append(i['event_name'])
+            topic5.append(i['topics'])
+    df = pd.DataFrame([el5, topic5]).T
+    #
+    tempdf = df[1][0]
+    df2 = tempdf[selected_topic]
+
+    tp = []
+    for timeslice in df2:
+        for wordspair in timeslice:
+            tp.append(wordspair[1])
+    mylist = list(set(tp))
+
+    empty_dict = []
+    empty_dict = dict.fromkeys(mylist)
+
+    temp_list = []
+
+    for timeslice in df2:
+        empty_dict = []
+        empty_dict = dict.fromkeys(mylist)
+        for wordspair in timeslice:
+            if wordspair[1] in mylist:
+                empty_dict[wordspair[1]] = wordspair[0]
+        for i in empty_dict:
+            if empty_dict[i] is None:
+                empty_dict[i] = 0
+        temp_list.append(copy.deepcopy(empty_dict))
+
+    new_dict = {}
+    for word in mylist:
+        new_dict[word] = []
+
+    for item in temp_list:
+        for word, p in item.items():
+            new_dict[word].append(p)
+    keyword_val = new_dict[selectedkeyword]
+    print(keyword_val)
+    traces.append(
+        go.Scatter(
+            x=[1, 2, 3, 4, 5],
+            y=keyword_val,
+            mode='lines+markers',
+            name=selectedkeyword
+
+        ))
+    return {
+        'data': traces,
+        'layout': go.Layout(
+            xaxis={
+                'title': 'Time slice',
+                'type': 'linear'
+
+            },
+            yaxis={
+                'title': 'Strength of Keyword',
+                'type': 'linear'
+
+            },
+            title='Visualization of Keyword Evolution'
+        )
+
+    }
 # For 10 minutes window
 # ----------------------------------------------------------------------------------------
 # Callback for Fig 1 - Evolution of topics in an event
