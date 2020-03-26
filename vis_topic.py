@@ -695,7 +695,7 @@ def update_fig5min(selectedevent):
     for i, vals in enumerate(strength5_new):
         traces.append(
             go.Scatter(
-                x=[2,4,6,8,10],
+                x=[1,2,3,4,5,6],
                 y=vals,
                 type='scatter',
                 mode='markers',
@@ -789,7 +789,7 @@ def display_click_data(clickData,selectedevent):
         # newp = [x / maxp for x in p]
         traces.append(
             go.Bar(
-                x=[2,4,6,8,10],
+                x=[1,2,3,4,5,6],
                 y=p,
                 name=word,
                 opacity=1,
@@ -912,7 +912,7 @@ def keyword_plot5(selectedevent,clickData, selectedkeyword):
     print(keyword_val)
     traces.append(
         go.Scatter(
-            x=[2,4,6,8,10],
+            x=[1,2,3,4,5,6],
             y=keyword_val,
             mode='lines+markers',
             name=selectedkeyword
