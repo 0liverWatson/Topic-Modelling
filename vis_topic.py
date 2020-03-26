@@ -60,7 +60,10 @@ layout_page1 = html.Div([
         dcc.Graph(id='5min1_keyword')
     ], style={'display': 'inline-block', 'width': '49%'}),
     html.Div([
-        html.Img(id="image_wc5")
+        html.Img(id="image_wc5"),
+        html.Label(
+            'Word Cloud of the selected topic : Visual representation of words in the topic using corresponding distributions over the window'),
+
     ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
@@ -80,7 +83,10 @@ layout_page2 = html.Div([
         dcc.Graph(id='10min1_keyword')
     ], style={'display': 'inline-block', 'width': '49%'}),
     html.Div([
-        html.Img(id="image_wc10")
+        html.Img(id="image_wc10"),
+        html.Label(
+            'Word Cloud of the selected topic : Visual representation of words in the topic using corresponding distributions over the window'),
+
     ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
@@ -100,7 +106,9 @@ layout_page3 = html.Div([
         dcc.Graph(id='60min1_keyword')
     ], style={'display': 'inline-block', 'width': '49%'}),
     html.Div([
-        html.Img(id="image_wc60")
+        html.Img(id="image_wc60"),
+        html.Label(
+            'Word Cloud of the selected topic : Visual representation of words in the topic using corresponding distributions over the window'),
     ], style={'display': 'inline-block', 'width': '49%'}),
 ])
 
@@ -394,7 +402,8 @@ def update_fig5min(selectedevent):
                 stackgroup='one',
                 fill='tonexty',
                 name=i,
-                opacity=1
+                opacity=1,
+                marker=dict(size = 15)
 
             ))
     return {
@@ -410,7 +419,7 @@ def update_fig5min(selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topics Evolution',
+            title='Visualization of Topics Evolution ( The strength of a topic over the time slices are to be inferred only by the coloured area of the topic respectively )',
             hovermode='closest',
             clickmode='event+select'
         )
@@ -499,7 +508,7 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Distribution of keywords',
+            title='Visualization of Distribution of keywords ( The distribution of a keyword on a time slice is to be inferred only by the respective coloured area on the bar for the keyword )',
             barmode='stack',
             colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
             # colorway ='BluYl_4'
@@ -703,7 +712,8 @@ def update_fig5min(selectedevent):
                 stackgroup='one',
                 fill='tonexty',
                 name=i,
-                opacity=1
+                opacity=1,
+                marker=dict(size = 15)
 
             ))
     return {
@@ -719,7 +729,7 @@ def update_fig5min(selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topics Evolution',
+            title='Visualization of Topics Evolution ( The strength of a topic over the time slices are to be inferred only by the coloured area of the topic respectively )',
             hovermode='closest',
             clickmode='event+select'
         )
@@ -808,7 +818,7 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Distribution of keywords',
+            title='Visualization of Distribution of keywords ( The distribution of a keyword on a time slice is to be inferred only by the respective coloured area on the bar for the keyword )',
             barmode='stack',
             colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
             # colorway ='BluYl_4'
@@ -1012,7 +1022,8 @@ def update_fig5min(selectedevent):
                 stackgroup='one',
                 fill='tonexty',
                 name=i,
-                opacity=1
+                opacity=1,
+                marker=dict(size = 15)
 
             ))
     return {
@@ -1028,7 +1039,7 @@ def update_fig5min(selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Topics Evolution',
+            title='Visualization of Topics Evolution ( The strength of a topic over the time slices are to be inferred only by the coloured area of the topic respectively )',
             hovermode='closest',
             clickmode='event+select'
         )
@@ -1117,7 +1128,7 @@ def display_click_data(clickData,selectedevent):
                 'type': 'linear'
 
             },
-            title='Visualization of Distribution of keywords',
+            title='Visualization of Distribution of keywords ( The distribution of a keyword on a time slice is to be inferred only by the respective coloured area on the bar for the keyword )',
             barmode='stack',
             colorway=['#C62828', '#AD1457', '#6A1B9A','#4527A0','#283593','#1565C0','#0277BD','#00838F','#00695C','#2E7D32','#558B2F','#9E9D24','#F9A825','#FF8F00','#EF6C00','#D84315','#4E342E','#424242','#37474F','#000000']
             # colorway ='BluYl_4'
